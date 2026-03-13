@@ -63,9 +63,9 @@ class MainActivity : ComponentActivity() {
                             composable("dashboard") {
                                 DashboardScreen(
                                     viewModel = viewModel,
-                                    userEmail = authUser?.email,
                                     onNavigateToAnalytics = { navController.navigate("analytics") },
-                                    onLogoutClick = { authViewModel.signOut() }
+                                    onLogoutClick = { authViewModel.signOut() },
+                                    userEmail = authUser?.email
                                 )
                             }
                             composable("analytics") {

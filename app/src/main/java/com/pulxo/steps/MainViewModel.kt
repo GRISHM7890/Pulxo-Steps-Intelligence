@@ -14,6 +14,7 @@ import com.pulxo.steps.domain.repository.AuthRepository
 import com.pulxo.steps.domain.repository.SyncRepository
 import com.pulxo.steps.domain.model.DailyStats
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
