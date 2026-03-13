@@ -12,6 +12,8 @@ import com.pulxo.steps.data.repository.FirebaseAuthRepository
 import com.pulxo.steps.data.repository.FirebaseSyncRepository
 import com.pulxo.steps.domain.repository.AuthRepository
 import com.pulxo.steps.domain.repository.SyncRepository
+import com.pulxo.steps.domain.repository.AppContainer
+import com.pulxo.steps.domain.repository.AppContainerProvider
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
 

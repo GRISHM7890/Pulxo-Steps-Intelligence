@@ -10,7 +10,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "Pulxo.Steps.Intelligence"
+        applicationId = "com.pulxo.steps.intelligence"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

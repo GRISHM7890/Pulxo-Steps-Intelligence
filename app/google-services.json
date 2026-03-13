@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1032375819832:android:ce7dd882d8e8b8b35d50cd",
         "android_client_info": {
-          "package_name": "Pulxo.Steps.Intelligence"
+          "package_name": "com.pulxo.steps.intelligence"
         }
       },
       "oauth_client": [],

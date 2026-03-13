@@ -12,6 +12,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.pulxo.steps.domain.repository.SensorDataSource
 import com.pulxo.steps.domain.repository.StepRepository
+import com.pulxo.steps.domain.repository.AppContainer
 import com.pulxo.steps.domain.repository.AppContainerProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

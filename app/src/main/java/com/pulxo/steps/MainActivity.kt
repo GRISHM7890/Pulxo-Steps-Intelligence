@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pulxo.steps.domain.model.DailyStats
 import com.pulxo.steps.domain.model.PulxoUser
+import com.pulxo.steps.domain.repository.AppContainer
 import com.pulxo.steps.domain.repository.AppContainerProvider
 import com.pulxo.steps.ui.DashboardScreen
 import com.pulxo.steps.ui.AuthScreen
@@ -21,7 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
