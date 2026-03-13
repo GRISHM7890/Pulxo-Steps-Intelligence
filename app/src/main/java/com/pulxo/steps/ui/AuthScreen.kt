@@ -25,6 +25,7 @@ import com.pulxo.steps.AuthState
 import com.pulxo.steps.AuthViewModel
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel,
