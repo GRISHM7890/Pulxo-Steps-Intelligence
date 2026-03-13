@@ -12,7 +12,20 @@
           "package_name": "Pulxo.Steps.Intelligence"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1032375819832-iohfvb33hmub1qcde8e8rfq6c9bab1u9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "Pulxo.Steps.Intelligence",
+            "certificate_hash": "c0ae9e81da130c78041bd82bc26bb6d1903b38f5"
+          }
+        },
+        {
+          "client_id": "1032375819832-rml75m7rf57u7aa8sem0e1cfr84ndfg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC4g6EEwshvm9Nqf1yK9M1WOLH-LDKKPGQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032375819832-rml75m7rf57u7aa8sem0e1cfr84ndfg5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
