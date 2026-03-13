@@ -24,7 +24,7 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
+        val debug by getting {
             storeFile = file("debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"

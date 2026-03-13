@@ -45,6 +45,7 @@ fun AuthScreen(
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
+            delay(1000) // Small delay for the "Success" animation to be seen
             onAuthSuccess()
             viewModel.resetState()
         }
@@ -152,30 +153,6 @@ fun AuthScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Error Display with Animation
-            AnimatedVisibility(
-                visible = authState is AuthState.Error,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                if (authState is AuthState.Error) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer
-                        ),
-                        modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = (authState as AuthState.Error).message,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(12.dp),
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-            }
-
             // Animated Action Button
             AnimatedVisibility(
                 visible = visible,
@@ -273,6 +250,73 @@ fun AuthScreen(
                 }
             }
         }
+
+        // --- Premium Dialogues ---
+        AnimatedVisibility(
+            visible = authState is AuthState.Success || authState is AuthState.Error,
+            enter = fadeIn(tween(400)) + scaleIn(tween(400, easing = OvershootInterpolator().toEasing())),
+            exit = fadeOut(tween(400)) + scaleOut(tween(400))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(28.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(28.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val isSuccess = authState is AuthState.Success
+                        Text(
+                            text = if (isSuccess) "Success!" else "Authentication Failed",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                        )
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        Text(
+                            text = if (isSuccess) "Welcome to Pulxo Steps. Let's get moving." else (authState as AuthState.Error).message,
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        
+                        if (!isSuccess) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Button(
+                                onClick = { viewModel.resetState() },
+                                modifier = Modifier.fillMaxWidth().height(56.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text("Try Again")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Helper to use Interpolator in Compose
+private fun android.view.animation.Interpolator.toEasing() = Easing { x -> getInterpolation(x) }
+
+private class OvershootInterpolator : android.view.animation.Interpolator {
+    override fun getInterpolation(input: Float): Float {
+        val t = input - 1.0f
+        return t * t * ((2.0f + 1.0f) * t + 2.0f) + 1.0f
     }
 }
 
