@@ -27,7 +27,7 @@ import kotlinx.coroutines.delay
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
-import com.google.android.libraries.identity.googleid.GetGoogleIdTokenRequest
+import com.google.android.libraries.identity.googleid.GetGoogleIdTokenOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
@@ -250,13 +250,13 @@ fun AuthScreen(
 
                     OutlinedButton(
                         onClick = {
-                            val googleIdTokenRequest = GetGoogleIdTokenRequest.Builder()
+                            val googleIdTokenOption = GetGoogleIdTokenOption.Builder()
                                 .setFilterByAuthorizedAccounts(false)
                                 .setServerClientId(serverClientId)
                                 .build()
 
                             val request = GetCredentialRequest.Builder()
-                                .addCredentialOption(googleIdTokenRequest)
+                                .addCredentialOption(googleIdTokenOption)
                                 .build()
 
                             coroutineScope.launch {
