@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    
+    <path android:pathData="M 0,0 h 108 v 108 h -108 z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0"
+                android:startY="0"
+                android:endX="108"
+                android:endY="108">
+                <item android:color="#7C3AED" android:offset="0.0" />
+                <item android:color="#3B82F6" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Foreground Waveform / Step Pulse -->
     <path
-        android:fillColor="#FF000000"
-        android:pathData="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 1,1 20,12A8,8 0 0,1 12,20"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M 28,54 L 28,70 C 28,72.2 29.8,74 32,74 C 34.2,74 36,72.2 36,70 L 36,54 C 36,51.8 34.2,50 32,50 C 29.8,50 28,51.8 28,54 Z 
+                          M 44,38 L 44,70 C 44,72.2 45.8,74 48,74 C 50.2,74 52,72.2 52,70 L 52,38 C 52,35.8 50.2,34 48,34 C 45.8,34 44,35.8 44,38 Z 
+                          M 60,46 L 60,70 C 60,72.2 61.8,74 64,74 C 66.2,74 68,72.2 68,70 L 68,46 C 68,43.8 66.2,42 64,42 C 61.8,42 60,43.8 60,46 Z 
+                          M 76,58 L 76,70 C 76,72.2 77.8,74 80,74 C 82.2,74 84,72.2 84,70 L 84,58 C 84,55.8 82.2,54 80,54 C 77.8,54 76,55.8 76,58 Z" />
 </vector>
