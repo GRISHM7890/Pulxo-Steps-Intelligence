@@ -19,18 +19,28 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.pulxo.steps.ui.AnalyticsScreen
+import androidx.compose.material.icons.filled.ExitToApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         val container = (application as AppContainerProvider).container
-        val viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+        val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(container.stepRepository) as T
+                return when (modelClass) {
+                    MainViewModel::class.java -> MainViewModel(
+                        container.stepRepository,
+                        container.authRepository,
+                        container.syncRepository
+                    ) as T
+                    AuthViewModel::class.java -> AuthViewModel(container.authRepository) as T
+                    else -> throw IllegalArgumentException("Unknown ViewModel class")
+                }
             }
-        })[MainViewModel::class.java]
+        }
+        val viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
+        val authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         setContent {
             MaterialTheme {
@@ -38,21 +48,31 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val authUser by authViewModel.currentUser.collectAsState()
                     val navController = rememberNavController()
 
-                    NavHost(navController = navController, startDestination = "dashboard") {
-                        composable("dashboard") {
-                            DashboardScreen(
-                                viewModel = viewModel,
-                                onNavigateToAnalytics = { navController.navigate("analytics") }
-                            )
-                        }
-                        composable("analytics") {
-                            val stats by viewModel.historicalStats.collectAsState()
-                            AnalyticsScreen(
-                                onBackClick = { navController.popBackStack() },
-                                stats = stats
-                            )
+                    if (authUser == null) {
+                        AuthScreen(
+                            viewModel = authViewModel,
+                            onAuthSuccess = { /* NavHost handles state change */ }
+                        )
+                    } else {
+                        NavHost(navController = navController, startDestination = "dashboard") {
+                            composable("dashboard") {
+                                DashboardScreen(
+                                    viewModel = viewModel,
+                                    userEmail = authUser?.email,
+                                    onNavigateToAnalytics = { navController.navigate("analytics") },
+                                    onLogoutClick = { authViewModel.signOut() }
+                                )
+                            }
+                            composable("analytics") {
+                                val stats by viewModel.historicalStats.collectAsState()
+                                AnalyticsScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                    stats = stats
+                                )
+                            }
                         }
                     }
                 }

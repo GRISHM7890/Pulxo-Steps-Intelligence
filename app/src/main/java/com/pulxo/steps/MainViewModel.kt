@@ -10,11 +10,37 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+import com.pulxo.steps.domain.repository.AuthRepository
+import com.pulxo.steps.domain.repository.SyncRepository
+import kotlinx.coroutines.flow.firstOrNull
+
 class MainViewModel(
     private val stepRepository: StepRepository,
+    private val authRepository: AuthRepository,
+    private val syncRepository: SyncRepository,
     private val calculateDistance: CalculateDistanceUseCase = CalculateDistanceUseCase(),
     private val calculateCalories: CalculateCaloriesUseCase = CalculateCaloriesUseCase()
 ) : ViewModel() {
+
+    init {
+        // Automatic sync to Firebase when steps change
+        viewModelScope.launch {
+            stepRepository.getTodayStepsFlow().collect { steps ->
+                val user = authRepository.currentUser.firstOrNull() ?: return@collect
+                val todayEpoch = System.currentTimeMillis() / (1000 * 60 * 60 * 24)
+                
+                // Fetch the full stats object to sync
+                val stats = DailyStats(
+                    dateEpochDays = todayEpoch,
+                    steps = steps,
+                    distanceMeters = calculateDistance(steps),
+                    caloriesBurned = calculateCalories(steps),
+                    activeTimeMinutes = 0 // TODO: Track active time
+                )
+                syncRepository.syncDailyStats(user.uid, stats)
+            }
+        }
+    }
 
     // Real-time UI state
     val dashboardState: StateFlow<DashboardUiState> = stepRepository.getTodayStepsFlow()

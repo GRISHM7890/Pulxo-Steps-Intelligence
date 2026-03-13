@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1032375819832",
+    "project_id": "pulxo-steps-intelligence",
+    "storage_bucket": "pulxo-steps-intelligence.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032375819832:android:ce7dd882d8e8b8b35d50cd",
+        "android_client_info": {
+          "package_name": "Pulxo.Steps.Intelligence"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4g6EEwshvm9Nqf1yK9M1WOLH-LDKKPGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

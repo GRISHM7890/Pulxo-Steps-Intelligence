@@ -18,12 +18,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import com.pulxo.steps.domain.repository.AuthRepository
+import com.pulxo.steps.domain.repository.SyncRepository
 
 class StepTrackingService : Service() {
 
     // In a real app, inject these via Hilt
     private lateinit var sensorDataSource: SensorDataSource
     private lateinit var stepRepository: StepRepository
+    private lateinit var authRepository: AuthRepository
+    private lateinit var syncRepository: SyncRepository
 
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
@@ -38,6 +43,8 @@ class StepTrackingService : Service() {
         val container = (application as AppContainerProvider).container
         sensorDataSource = container.sensorDataSource
         stepRepository = container.stepRepository
+        authRepository = container.authRepository
+        syncRepository = container.syncRepository
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -65,15 +72,39 @@ class StepTrackingService : Service() {
                     val delta = totalSteps - previousStepCount
                     if (delta > 0) {
                         // Persist immediately. In production, batch this to save battery!
-                        stepRepository.addSteps(delta, System.currentTimeMillis())
+                        val timestamp = System.currentTimeMillis()
+                        stepRepository.addSteps(delta, timestamp)
                         previousStepCount = totalSteps
                         
+                        // Cloud sync (intermittent for battery)
+                        if (totalSteps % 10 == 0) {
+                            syncToCloud(totalSteps)
+                        }
+
                         // Update notification
                         updateNotification("Steps today: $totalSteps")
                     }
                 }
             }
             .launchIn(serviceScope)
+    }
+
+    private fun syncToCloud(totalSteps: Int) {
+        val user = (application as AppContainerProvider).container.authRepository.currentUser.value
+        if (user != null) {
+            val todayEpoch = System.currentTimeMillis() / (1000 * 60 * 60 * 24)
+            // Note: Simple calculation here, in production use actual stats from repository
+            val stats = com.pulxo.steps.domain.model.DailyStats(
+                dateEpochDays = todayEpoch,
+                steps = totalSteps,
+                distanceMeters = totalSteps * 0.7f,
+                caloriesBurned = totalSteps * 0.04f,
+                activeTimeMinutes = 0
+            )
+            serviceScope.launch {
+                syncRepository.syncDailyStats(user.uid, stats)
+            }
+        }
     }
 
     private fun updateNotification(text: String) {

@@ -8,9 +8,10 @@ import com.pulxo.steps.data.sensor.AndroidSensorDataSource
 import com.pulxo.steps.domain.repository.SensorDataSource
 import com.pulxo.steps.domain.repository.StepRepository
 
-import com.pulxo.steps.domain.repository.AppContainer
-import com.pulxo.steps.domain.repository.StepRepository
-import com.pulxo.steps.domain.repository.SensorDataSource
+import com.pulxo.steps.data.repository.FirebaseAuthRepository
+import com.pulxo.steps.data.repository.FirebaseSyncRepository
+import com.pulxo.steps.domain.repository.AuthRepository
+import com.pulxo.steps.domain.repository.SyncRepository
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
@@ -28,5 +29,13 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val sensorDataSource: SensorDataSource by lazy {
         AndroidSensorDataSource(context)
+    }
+
+    override val authRepository: AuthRepository by lazy {
+        FirebaseAuthRepository()
+    }
+
+    override val syncRepository: SyncRepository by lazy {
+        FirebaseSyncRepository()
     }
 }

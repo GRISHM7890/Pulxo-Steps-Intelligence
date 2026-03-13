@@ -1,14 +1,16 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
+
 
 android {
     namespace = "com.pulxo.steps"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.pulxo.steps"
+        applicationId = "Pulxo.Steps.Intelligence"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -66,4 +68,10 @@ dependencies {
     
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 }

@@ -25,7 +25,9 @@ import com.pulxo.steps.service.StepTrackingService
 @Composable
 fun DashboardScreen(
     viewModel: MainViewModel,
-    onNavigateToAnalytics: () -> Unit
+    onNavigateToAnalytics: () -> Unit,
+    onLogoutClick: () -> Unit,
+    userEmail: String? = null
 ) {
     val state by viewModel.dashboardState.collectAsState()
     val context = LocalContext.current
@@ -38,10 +40,34 @@ fun DashboardScreen(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = onNavigateToAnalytics) {
-                Text("View History", fontWeight = FontWeight.Bold)
+            Column {
+                Text(
+                    text = "Hello,",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = userEmail ?: "User",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            
+            Row {
+                TextButton(onClick = onNavigateToAnalytics) {
+                    Text("View History", fontWeight = FontWeight.Bold)
+                }
+                IconButton(onClick = onLogoutClick) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Default.ExitToApp,
+                        contentDescription = "Logout",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
 

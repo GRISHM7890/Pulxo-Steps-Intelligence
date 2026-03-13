@@ -6,6 +6,8 @@ package com.pulxo.steps.domain.repository
 interface AppContainer {
     val stepRepository: StepRepository
     val sensorDataSource: SensorDataSource
+    val authRepository: AuthRepository
+    val syncRepository: SyncRepository
 }
 
 /**

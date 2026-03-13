@@ -12,3 +12,10 @@ data class StepRecord(
     val timestamp: Long,
     val steps: Int
 )
+
+data class PulxoUser(
+    val uid: String,
+    val email: String?,
+    val displayName: String?,
+    val photoUrl: String?
+)
