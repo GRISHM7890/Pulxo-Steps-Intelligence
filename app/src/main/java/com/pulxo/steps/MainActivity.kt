@@ -7,20 +7,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.pulxo.steps.ui.DashboardScreen
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.pulxo.steps.domain.model.DailyStats
 import com.pulxo.steps.domain.repository.AppContainerProvider
 import com.pulxo.steps.ui.DashboardScreen
 import com.pulxo.steps.ui.AuthScreen
 import com.pulxo.steps.ui.AnalyticsScreen
-
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 
 class MainActivity : ComponentActivity() {

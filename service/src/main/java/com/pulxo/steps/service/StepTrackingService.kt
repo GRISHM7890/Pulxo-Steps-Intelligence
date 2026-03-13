@@ -19,6 +19,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.firstOrNull
 import com.pulxo.steps.domain.repository.AuthRepository
 import com.pulxo.steps.domain.repository.SyncRepository
 
@@ -90,18 +91,18 @@ class StepTrackingService : Service() {
     }
 
     private fun syncToCloud(totalSteps: Int) {
-        val user = (application as AppContainerProvider).container.authRepository.currentUser.value
-        if (user != null) {
-            val todayEpoch = System.currentTimeMillis() / (1000 * 60 * 60 * 24)
-            // Note: Simple calculation here, in production use actual stats from repository
-            val stats = com.pulxo.steps.domain.model.DailyStats(
-                dateEpochDays = todayEpoch,
-                steps = totalSteps,
-                distanceMeters = totalSteps * 0.7f,
-                caloriesBurned = totalSteps * 0.04f,
-                activeTimeMinutes = 0
-            )
-            serviceScope.launch {
+        serviceScope.launch {
+            val user = authRepository.currentUser.firstOrNull()
+            if (user != null) {
+                val todayEpoch = System.currentTimeMillis() / (1000 * 60 * 60 * 24)
+                // Note: Simple calculation here, in production use actual stats from repository
+                val stats = com.pulxo.steps.domain.model.DailyStats(
+                    dateEpochDays = todayEpoch,
+                    steps = totalSteps,
+                    distanceMeters = totalSteps * 0.7f,
+                    caloriesBurned = totalSteps * 0.04f,
+                    activeTimeMinutes = 0
+                )
                 syncRepository.syncDailyStats(user.uid, stats)
             }
         }
