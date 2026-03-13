@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pulxo.steps.domain.model.DailyStats
+import com.pulxo.steps.domain.model.PulxoUser
 import com.pulxo.steps.domain.repository.AppContainerProvider
 import com.pulxo.steps.ui.DashboardScreen
 import com.pulxo.steps.ui.AuthScreen
