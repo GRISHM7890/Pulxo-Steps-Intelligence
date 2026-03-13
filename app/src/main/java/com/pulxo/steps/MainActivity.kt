@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pulxo.steps.domain.repository.AppContainerProvider
 import com.pulxo.steps.ui.DashboardScreen
+import com.pulxo.steps.ui.AuthScreen
+import com.pulxo.steps.ui.AnalyticsScreen
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue

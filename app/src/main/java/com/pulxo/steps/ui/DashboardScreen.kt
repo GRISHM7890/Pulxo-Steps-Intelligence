@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.pulxo.steps.MainViewModel
 import com.pulxo.steps.service.StepTrackingService
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 
 @Composable
 fun DashboardScreen(
@@ -63,7 +65,7 @@ fun DashboardScreen(
                 }
                 IconButton(onClick = onLogoutClick) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.ExitToApp,
+                        imageVector = Icons.Default.ExitToApp,
                         contentDescription = "Logout",
                         tint = MaterialTheme.colorScheme.error
                     )
