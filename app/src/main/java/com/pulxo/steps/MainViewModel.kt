@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.stateIn
 
 import com.pulxo.steps.domain.repository.AuthRepository
 import com.pulxo.steps.domain.repository.SyncRepository
+import com.pulxo.steps.domain.model.DailyStats
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val stepRepository: StepRepository,

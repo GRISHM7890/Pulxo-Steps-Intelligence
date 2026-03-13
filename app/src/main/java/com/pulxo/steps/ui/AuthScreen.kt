@@ -113,7 +113,7 @@ fun AuthScreen(
         
         Spacer(modifier = Modifier.height(24.dp))
         
-        Divider()
+        HorizontalDivider()
         
         Spacer(modifier = Modifier.height(24.dp))
         
