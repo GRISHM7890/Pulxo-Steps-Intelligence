@@ -19,9 +19,9 @@ fun AuthScreen(
     viewModel: AuthViewModel,
     onAuthSuccess: () -> Unit
 ) {
-    var email by remember { mutableStateFlowOf("") }
-    var password by remember { mutableStateFlowOf("") }
-    var isSignUp by remember { mutableStateFlowOf(false) }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isSignUp by remember { mutableStateOf(false) }
     
     val authState by viewModel.authState.collectAsState()
 
@@ -127,6 +127,4 @@ fun AuthScreen(
     }
 }
 
-// Helper to use State in compose comfortably
-@Composable
-fun <T> mutableStateFlowOf(value: T): MutableState<T> = remember { mutableStateOf(value) }
+

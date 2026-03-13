@@ -8,7 +8,7 @@ import com.pulxo.steps.domain.repository.AppContainerProvider
 class PulxoStepsApp : Application(), AppContainerProvider {
     
     // Manual dependency injection container
-    lateinit var container: AppContainer
+    override lateinit var container: AppContainer
 
     override fun onCreate() {
         super.onCreate()
