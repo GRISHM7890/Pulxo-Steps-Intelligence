@@ -16,7 +16,7 @@ class MainViewModel(
     private val calculateCalories: CalculateCaloriesUseCase = CalculateCaloriesUseCase()
 ) : ViewModel() {
 
-    // Real-time step flow transformed into UI state
+    // Real-time UI state
     val dashboardState: StateFlow<DashboardUiState> = stepRepository.getTodayStepsFlow()
         .map { steps ->
             DashboardUiState(
@@ -27,8 +27,15 @@ class MainViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000), // stop collecting if UI is backgrounded
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = DashboardUiState()
+        )
+
+    val historicalStats: StateFlow<List<DailyStats>> = stepRepository.getLastSevenDaysStatsFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
         )
 }
 

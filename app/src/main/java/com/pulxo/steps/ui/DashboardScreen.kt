@@ -13,14 +13,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pulxo.steps.DashboardUiState
+import android.content.Intent
+import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import com.pulxo.steps.MainViewModel
+import com.pulxo.steps.service.StepTrackingService
 
 @Composable
 fun DashboardScreen(
-    // Normally passed from ViewModel: dashboardState: StateFlow<DashboardUiState>
-    // val state by dashboardState.collectAsState()
+    viewModel: MainViewModel,
+    onNavigateToAnalytics: () -> Unit
 ) {
-    // Mock state for demonstration
-    val state = DashboardUiState(currentSteps = 8432, distanceMeters = 6071f, caloriesBurned = 337f)
+    val state by viewModel.dashboardState.collectAsState()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -28,33 +36,53 @@ fun DashboardScreen(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = onNavigateToAnalytics) {
+                Text("View History", fontWeight = FontWeight.Bold)
+            }
+        }
+
         Text(
             text = "Pulxo Step Intelligence",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 32.dp, bottom = 48.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 48.dp)
         )
 
-        // Circular progress indicator (Mocked visual)
+        // Real-time Progress Ring
         Box(
-            modifier = Modifier
-                .size(250.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
+            modifier = Modifier.size(260.dp),
             contentAlignment = Alignment.Center
         ) {
+            val primaryColor = MaterialTheme.colorScheme.primary
+            val secondaryColor = MaterialTheme.colorScheme.primaryContainer
+            
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                drawCircle(color = secondaryColor, style = Stroke(width = 20.dp.toPx()))
+                drawArc(
+                    color = primaryColor,
+                    startAngle = -90f,
+                    sweepAngle = (state.currentSteps / 10000f) * 360f,
+                    useCenter = false,
+                    style = Stroke(width = 20.dp.toPx(), cap = StrokeCap.Round)
+                )
+            }
+            
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "${state.currentSteps}",
                     fontSize = 56.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "Steps Today",
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    text = "Today's Steps",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -72,10 +100,29 @@ fun DashboardScreen(
         Spacer(modifier = Modifier.weight(1f))
         
         Button(
-            onClick = { /* TODO: Start/Stop tracking service via Intent */ },
-            modifier = Modifier.fillMaxWidth().height(56.dp)
+            onClick = { 
+                val intent = Intent(context, StepTrackingService::class.java)
+                context.startForegroundService(intent)
+            },
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+            shape = MaterialTheme.shapes.large
         ) {
-            Text("Resume Tracking", fontSize = 18.sp)
+            Text("Resume Tracking", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = { 
+                val intent = Intent(context, StepTrackingService::class.java).apply {
+                    action = StepTrackingService.ACTION_STOP_SERVICE
+                }
+                context.startService(intent)
+            },
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Pause Tracking", fontSize = 18.sp)
         }
     }
 }

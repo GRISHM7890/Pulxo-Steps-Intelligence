@@ -17,6 +17,22 @@ class StepRepositoryImpl(
         return stepDao.getStatsForDayFlow(todayEpoch).map { it?.steps ?: 0 }
     }
 
+    override fun getLastSevenDaysStatsFlow(): Flow<List<DailyStats>> {
+        val endEpoch = System.currentTimeMillis() / (1000 * 60 * 60 * 24)
+        val startEpoch = endEpoch - 7
+        return stepDao.getStatsForDateRangeFlow(startEpoch, endEpoch).map { list ->
+            list.map { entity ->
+                DailyStats(
+                    dateEpochDays = entity.dateEpochDays,
+                    steps = entity.steps,
+                    distanceMeters = entity.distanceMeters,
+                    caloriesBurned = entity.caloriesBurned,
+                    activeTimeMinutes = entity.activeTimeMinutes
+                )
+            }
+        }
+    }
+
     override suspend fun getStatsForDateRange(
         startEpochDay: Long,
         endEpochDay: Long

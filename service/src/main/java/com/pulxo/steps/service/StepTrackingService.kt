@@ -12,6 +12,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.pulxo.steps.domain.repository.SensorDataSource
 import com.pulxo.steps.domain.repository.StepRepository
+import com.pulxo.steps.domain.repository.AppContainerProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -34,7 +35,9 @@ class StepTrackingService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification("Starting step tracker..."))
         
-        // Normally initialize dependencies here or let Hilt do it
+        val container = (application as AppContainerProvider).container
+        sensorDataSource = container.sensorDataSource
+        stepRepository = container.stepRepository
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

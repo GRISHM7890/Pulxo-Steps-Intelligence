@@ -18,6 +18,9 @@ interface StepDao {
     @Query("SELECT * FROM daily_stats WHERE dateEpochDays BETWEEN :startEpoch AND :endEpoch")
     suspend fun getStatsForDateRange(startEpoch: Long, endEpoch: Long): List<DailyStatsEntity>
 
+    @Query("SELECT * FROM daily_stats WHERE dateEpochDays BETWEEN :startEpoch AND :endEpoch ORDER BY dateEpochDays DESC")
+    fun getStatsForDateRangeFlow(startEpoch: Long, endEpoch: Long): Flow<List<DailyStatsEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateDailyStats(stats: DailyStatsEntity)
 

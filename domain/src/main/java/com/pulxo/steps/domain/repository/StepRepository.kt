@@ -20,6 +20,11 @@ interface StepRepository {
     suspend fun getStatsForDate(epochDay: Long): DailyStats?
     
     /**
+     * Emits the statistics for the last 7 days.
+     */
+    fun getLastSevenDaysStatsFlow(): Flow<List<DailyStats>>
+
+    /**
      * Saves raw delta steps (e.g., +10 steps) to the local database, 
      * updating the current day's total.
      */
