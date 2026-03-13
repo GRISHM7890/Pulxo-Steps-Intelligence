@@ -24,6 +24,13 @@ import androidx.compose.ui.unit.sp
 import com.pulxo.steps.AuthState
 import com.pulxo.steps.AuthViewModel
 import kotlinx.coroutines.delay
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdTokenRequest
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -31,6 +38,11 @@ fun AuthScreen(
     viewModel: AuthViewModel,
     onAuthSuccess: () -> Unit
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val credentialManager = remember { CredentialManager.create(context) }
+    val serverClientId = "1032375819832-rml75m7rf57u7aa8sem0e1cfr84ndfg5.apps.googleusercontent.com" // From google-services.json client_type 3
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isSignUp by remember { mutableStateOf(false) }
@@ -237,7 +249,32 @@ fun AuthScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedButton(
-                        onClick = { /* TODO: Google Sign In logic */ },
+                        onClick = {
+                            val googleIdTokenRequest = GetGoogleIdTokenRequest.Builder()
+                                .setFilterByAuthorizedAccounts(false)
+                                .setServerClientId(serverClientId)
+                                .build()
+
+                            val request = GetCredentialRequest.Builder()
+                                .addCredentialOption(googleIdTokenRequest)
+                                .build()
+
+                            coroutineScope.launch {
+                                try {
+                                    val result = credentialManager.getCredential(
+                                        request = request,
+                                        context = context
+                                    )
+                                    val credential = result.credential
+                                    if (credential is GoogleIdTokenCredential) {
+                                        viewModel.signInWithGoogle(credential.idToken)
+                                    }
+                                } catch (e: GetCredentialException) {
+                                    // Handle cancellation or error silently if it's a common case, 
+                                    // or show error if critical.
+                                }
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth().height(60.dp),
                         shape = RoundedCornerShape(20.dp),
                         border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.5.dp)

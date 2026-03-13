@@ -30,6 +30,15 @@ class AuthViewModel(
         }
     }
 
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            authRepository.signInWithGoogle(idToken)
+                .onSuccess { _authState.value = AuthState.Success }
+                .onFailure { _authState.value = AuthState.Error(it.message ?: "Google SignIn Failed") }
+        }
+    }
+
     fun signUpWithEmail(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
